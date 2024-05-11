@@ -1,0 +1,40 @@
+clc
+clear all
+
+% Esempio di utilizzo
+% Definiamo una matrice di rotazione
+R_example = [-2/3,  2/3, -1/3; 
+              2/3,  1/3, -2/3; 
+             -1/3, -2/3, -2/3]
+
+% Calcoliamo l'angolo e l'asse di rotazione
+[theta_example, axis_example] = rotationMatrixToAngleAxis(R_example)
+
+function [theta, axis] = rotationMatrixToAngleAxis(R)
+    % Verifica se la matrice di rotazione è valida
+    if ~isRotationMatrix(R)
+        error('Input non è una matrice di rotazione valida');
+    end
+    
+    % Calcola l'angolo dell'asse
+    theta = acos((trace(R) - 1) / 2);
+    
+    % Calcola l'asse di rotazione
+    if abs(theta) < eps
+        axis = [0; 0; 1]; % Se l'angolo è vicino a zero, l'asse può essere arbitrario, qui scegliamo z
+    else
+        axis = (1 / (2 * sin(theta))) * [R(3,2) - R(2,3); R(1,3) - R(3,1); R(2,1) - R(1,2)];
+    end
+end
+
+function valid = isRotationMatrix(R)
+    % Verifica se la matrice è quadrata
+    if size(R,1) ~= size(R,2)
+        valid = false;
+        return;
+    end
+    
+    % Verifica se la matrice è ortogonale
+    identity = eye(size(R));
+    valid = isequal(round(R' * R, 10), identity) && isequal(round(R * R', 10), identity);
+end

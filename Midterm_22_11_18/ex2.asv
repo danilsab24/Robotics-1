@@ -1,0 +1,13 @@
+clc
+clear all
+
+syms q1 q2 q3
+R_initial = [ cos(q1),       0.5, -sqrt(3)/2; 
+             0,         0,          0; 
+              sin(q1), sqrt(3)/2,        0.5]
+
+R_final = [1,  0, 0; 
+           0,  0, 1; 
+           0, -1, 0]
+
+
