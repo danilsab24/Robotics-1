@@ -42,15 +42,15 @@ for i=1:N
     T = simplify(T);
 end
 
-T0N = T
+T0N = T;
 
-p = T(1:3,4)
+p = T(1:3,4);
 
-n = T(1:3,1)
+n = T(1:3,1);
 
-s = T(1:3,2)
+s = T(1:3,2);
 
-a = T(1:3,3)
+a = T(1:3,3);
 
 A_0_1 = A{1};
 
@@ -60,36 +60,90 @@ A_0_3 = A{1} * A{2} * A{3};
 
 A_0_4 = simplify(A{1} * A{2} * A{3} * A{4}, steps = 100);
 
-P = A_0_4(1:3, 4);
+p_01 = A_0_1(1:3, end);
+p_02 = A_0_2(1:3, end);
+p_03 = A_0_3(1:3, end);
 
-J = simplify(jacobian(P, [q1, q2, q3, q4]), Steps=1000)
+%punto b
+p_04 = A_0_4(1:3, end)
 
-R_A_0_1 = A_0_1(1:3, 1:3)
+J_analitic = jacobian(p_04, [q1,q2,q3,q4])
 
-% R_A_0_2 = A_0_2(1:3, 1:3)
-% 
-% R_A_0_3 = A_0_3(1:3, 1:3)
-% 
-% R_A_0_4 = A_0_4(1:3, 1:3)
 
-J_frame1 = simplify(R_A_0_1.'*J, Steps=1000)
+p_0_E = p_04;
+p_1_E = p_04 - p_01;
+p_2_E = p_04 - p_02;
+p_3_E = p_04 - p_03;
 
-% J_frame2 = simplify(J*R_A_0_2, Steps=1000)
-% 
-% J_frame3 = simplify(J*R_A_0_3, Steps=1000)
-% 
-% J_frame4 = simplify(J*R_A_0_4, Steps=1000)
+R_0_1 = A_0_1(1:3, 1:3);
+R_0_2 = A_0_2(1:3, 1:3);
+R_0_3 = A_0_3(1:3, 1:3);
+R_0_4 = A_0_4(1:3, 1:3);
 
-J_red = subs(J_frame1, [B,D], [0,0]) 
+z_0 = [0;
+       0;
+       1]
 
-det_J_red = simplify(det(J_red.'*J_red), Steps=1000)
+z_1 = simplify(R_0_1*z_0, Steps=100);
+z_2 = simplify(R_0_2*z_0, Steps=100);
+z_3 = simplify(R_0_3*z_0, Steps=100);
 
-J_red_subs = subs(J_red, [q1,q2,q3,q4], [0,pi/2,0,0])
+p_z_0 = simplify(cross(z_0, p_0_E), steps = 100);
+p_z_1 = simplify(cross(z_1, p_1_E), steps = 100);
+p_z_2 = simplify(cross(z_2, p_2_E), steps = 100);
+p_z_3 = simplify(cross(z_3, p_3_E), steps = 100);
 
-range_J_red_subs = simplify(colspace(J_red_subs), Steps=1000)
 
-J_inv_red_subs = pinv(J_red_subs)
+%% TO MODIFY BASED ON THE TYPE OF JOINTS
+J_L_A = [p_z_0, p_z_1, p_z_2, p_z_3;
+         z_0, z_1, z_2, z_3];
 
-v_star = [1; 0; 0]
 
-q_dot_star = J_inv_red_subs*v_star
+rotation_mid_frame_1 = [R_0_1, [0, 0, 0; 
+                                  0, 0, 0; 
+                                  0, 0, 0;];
+                        [0, 0, 0; 
+                         0, 0, 0; 
+                         0, 0, 0;], R_0_1];
+
+
+rotation_mid_frame_2 = [R_0_2, [0, 0, 0; 
+                                  0, 0, 0; 
+                                  0, 0, 0;];
+                        [0, 0, 0; 
+                         0, 0, 0; 
+                         0, 0, 0;], R_0_2];
+
+
+
+rotation_mid_frame_3 = [R_0_3, [0, 0, 0; 
+                                  0, 0, 0; 
+                                  0, 0, 0;];
+                        [0, 0, 0; 
+                         0, 0, 0; 
+                         0, 0, 0;], R_0_3];
+
+
+
+rotation_mid_frame_4 = [R_0_4, [0, 0, 0; 
+                                  0, 0, 0; 
+                                  0, 0, 0;];
+                        [0, 0, 0; 
+                         0, 0, 0; 
+                         0, 0, 0;], R_0_4];
+
+%punto c
+J_red = simplify(subs(J_analitic, [B,D], [0,0]), steps=1000)
+J_red_1 = simplify(R_0_4.'*J_red, steps=100)
+
+J_red_1_subs = simplify(subs(J_red_1, [q1,q2,q3,q4], [0,pi/2,pi/2,0]), steps=100)
+R_J_red_1_subs = colspace(J_red_1_subs)
+
+v_star = [1;0;0]
+pseudo_inv_J_red = simplify(pinv(J_red_1_subs), steps=100)
+q_dot_star = simplify(pseudo_inv_J_red*v_star, steps=100)
+
+% J_L_A_mid_frame_1 = simplify(rotation_mid_frame_1.' * J_L_A, steps=100)
+% J_L_A_mid_frame_2 = simplify(rotation_mid_frame_2.' * J_L_A, steps=100)
+% J_L_A_mid_frame_3 = simplify(rotation_mid_frame_3.' * J_L_A, steps=100)
+% J_L_A_mid_frame_4 = simplify(rotation_mid_frame_4.' * J_L_A, steps=100)
