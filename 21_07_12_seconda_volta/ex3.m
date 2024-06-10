@@ -54,26 +54,53 @@ Rz = [cos(alpha), -sin(alpha), 0;
 R_ZYX = simplify(Rz*Ry*Rx, steps=100)
 
 beta_R1 = atan2(-r_31_R1, sqrt((r_32_R1)^2)+(r_33_R1)^2);
-alpha_R1 = atan2(r_21_R1/cos(beta), r_11_R1/cos(beta));
-gamma_R1 = atan2(r_32_R1/cos(beta), r_33_R1/cos(beta));
+alpha_R1 = atan2(r_21_R1/cos(beta_R1), r_11_R1/cos(beta_R1));
+gamma_R1 = atan2(r_32_R1/cos(beta_R1), r_33_R1/cos(beta_R1));
+
+beta_R1_neg = atan2(-r_31_R1, -sqrt((r_32_R1)^2)+(r_33_R1)^2);
+alpha_R1_neg = atan2(r_21_R1/cos(beta_R1_neg), r_11_R1/cos(beta_R1_neg));
+gamma_R1_neg = atan2(r_32_R1/cos(beta_R1_neg), r_33_R1/cos(beta_R1_neg));
 
 beta_Rvia = atan2(-r_31_Rvia, sqrt((r_32_Rvia)^2)+(r_33_Rvia)^2);
-alpha_Rvia = atan2(r_21_Rvia/cos(beta), r_11_Rvia/cos(beta));
-gamma_Rvia = atan2(r_32_Rvia/cos(beta), r_33_Rvia/cos(beta));
+alpha_Rvia = atan2(r_21_Rvia/cos(beta_Rvia), r_11_Rvia/cos(beta_Rvia));
+gamma_Rvia = atan2(r_32_Rvia/cos(beta_Rvia), r_33_Rvia/cos(beta_Rvia));
+
+beta_Rvia_neg = atan2(-r_31_Rvia, -sqrt((r_32_Rvia)^2)+(r_33_Rvia)^2);
+alpha_Rvia_neg = atan2(r_21_Rvia/cos(beta_Rvia_neg), r_11_Rvia/cos(beta_Rvia_neg));
+gamma_Rvia_neg = atan2(r_32_Rvia/cos(beta_Rvia_neg), r_33_Rvia/cos(beta_Rvia_neg));
 
 beta_R2 = atan2(-r_31_R2, sqrt((r_32_R2)^2)+(r_33_R2)^2);
-alpha_R2 = atan2(r_21_R2/cos(beta), r_11_R2/cos(beta));
-gamma_R2 = atan2(r_32_R2/cos(beta), r_33_R2/cos(beta));
+alpha_R2 = atan2(r_21_R2/cos(beta_R2), r_11_R2/cos(beta_R2));
+gamma_R2 = atan2(r_32_R2/cos(beta_R2), r_33_R2/cos(beta_R2));
+
+beta_R2_neg = atan2(-r_31_R2, -sqrt((r_32_R2)^2)+(r_33_R2)^2);
+alpha_R2_neg = atan2(r_21_R2/cos(beta_R2_neg), r_11_R2/cos(beta_R2_neg));
+gamma_R2_neg = atan2(r_32_R2/cos(beta_R2_neg), r_33_R2/cos(beta_R2_neg));
 
 disp("angoli trovati: ")
-disp("alpha for R1: "+alpha_R1)
-disp("beta for R1: "+beta_R1)
-disp("gamma for R1: "+gamma_R1)
+disp("For R1")
+disp("alpha pos: "+alpha_R1)
+disp("beta pos: "+beta_R1)
+disp("gamma pos: "+gamma_R1)
 disp(" ")
-disp("alpha for Rvia: "+alpha_Rvia)
-disp("beta for Rvia: "+beta_Rvia)
-disp("gamma for Rvia: "+gamma_Rvia)
+disp("alpha neg: "+alpha_R1_neg)
+disp("beta neg: "+beta_R1_neg)
+disp("gamma neg: "+gamma_R1_neg)
 disp(" ")
-disp("alpha for R2: "+alpha_R2)
-disp("beta for R2: "+beta_R2)
-disp("gamma for R2: "+gamma_R2)
+disp("For R_via")
+disp("alpha pos: "+alpha_Rvia)
+disp("beta pos: "+beta_Rvia)
+disp("gamma pos: "+gamma_Rvia)
+disp(" ")
+disp("alpha neg: "+alpha_Rvia_neg)
+disp("beta neg: "+beta_Rvia_neg)
+disp("gamma neg: "+gamma_Rvia_neg)
+disp(" ")
+disp("For R2")
+disp("alpha pos: "+alpha_R2)
+disp("beta pos: "+beta_R2)
+disp("gamma pos: "+gamma_R2)
+disp(" ")
+disp("alpha neg: "+alpha_R2_neg)
+disp("beta neg: "+beta_R2_neg)
+disp("gamma neg: "+gamma_R2_neg)
