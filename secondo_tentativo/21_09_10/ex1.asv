@@ -1,0 +1,23 @@
+clear all
+clc
+
+syms q1 q2 q3 L
+
+p = [q1+L*cos(q2)+L*cos(q2+q3);
+         L*sin(q2)+L*sin(q2+q3);
+               q2+q3]
+
+J = jacobian(p,[q1,q2,q3])
+
+det_J = simplify(det(J),steps=100)
+
+J_subs = simplify(subs(J,q2,pi/2),steps=100)
+
+NULL_J_subs = null(J_subs)
+
+RANGE_J_subs = colspace(J_subs)
+
+r_dot_1 = [1;0;0]
+
+q_dot_1 = inv(J_subs)*r_dot_1
+
